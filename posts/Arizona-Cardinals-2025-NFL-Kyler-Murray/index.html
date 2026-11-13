@@ -9,7 +9,7 @@
 <meta name="author" content="Monty Meyer">
 <meta name="dcterms.date" content="2026-11-13">
 
-<title>Were the Cardinals that bad in 2025? – Monty’s sportsblog</title>
+<title>Were the Cardinals were bad in 2025. Were they 3-14 bad? – Monty’s sportsblog</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -27,6 +27,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -294,7 +329,7 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Were the Cardinals that bad in 2025?</h1>
+      <h1 class="title">Were the Cardinals were bad in 2025. Were they 3-14 bad?</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">lowercaseword</div>
               </div>
@@ -334,7 +369,195 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<p>This is a story about The Cardinals 2025 season.</p>
+<p>The Arizona Cardinals finished the 2025 season 3-14. That record tied them with the Jets, Titans and Raiders for the fewest wins in the NFC.&nbsp;</p>
+<p>So that concludes it, worst team in the conference right? Case closed.&nbsp;</p>
+<p>But wait, not so fast. A record tells you what happened. It doesn’t tell you why it happened and it doesn’t tell you who you played. Arizona spent the season in the NFC West with the Seahawks, Rams and 49ers. Those three teams had a combined win total of 38 games, all made the playoffs and Seattle was the one who won the super bowl. According to Pro-Football Reference’s numbers, the Cardinals had the hardest schedule in the league.&nbsp;</p>
+<p>So the question is simple, were the Cardinals a truly bad team, a brutal schedule, or some of both?&nbsp;</p>
+<p>To find this out, I used two sets of data from Pro-Football-Reference, the 2025 standings for all 32 teams, and the Cardinals game by game results for the 2025 season.&nbsp;&nbsp;</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.2.1     ✔ readr     2.2.0
+✔ forcats   1.0.1     ✔ stringr   1.6.0
+✔ ggplot2   4.0.3     ✔ tibble    3.3.1
+✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+✔ purrr     1.2.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggrepel)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>standings <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"nfl_standings_2025.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 32 Columns: 16
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (4): team, conference, division, playoff
+dbl (12): W, L, T, W-L%, PF, PA, PD, MoV, SoS, SRS, OSRS, DSRS
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cardinals <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"cardinals_games_2025.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 17 Columns: 12
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (5): home_away, opponent, result, overtime, opponent_playoff
+dbl  (5): week, cardinals_points, opponent_points, margin, opponent_wins
+lgl  (1): one_score
+date (1): date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ari <span class="ot">&lt;-</span> standings <span class="sc">|&gt;</span> <span class="fu">filter</span>(team <span class="sc">==</span> <span class="st">"Arizona Cardinals"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>The key thing to look at in this post is what Pro-Football-Reference calls SRS which is short for Simple Rating System. It essentially takes a team’s average margin of victory and adjusts it for how good its opponents were. Zero is an average team, with positive being better than average and negative worse. SRS splits into an offensive rating (OSRS) and a defensive rating (DSRS) and the size of the opponent adjustment is the team’s strength of schedule (SoS). The higher the Sos, the tougher the schedule.&nbsp;</p>
+<p>Arizona’s SRS was -4.4. That clearly isn’t good but it’s ninth worst in the league, not tied for worst. Eight teams were worst once you account for who they played against. So what went wrong?</p>
+<p>The Problem was Defense</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"grey"</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"grey"</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> standings, <span class="fu">aes</span>(<span class="at">x =</span> OSRS, <span class="at">y =</span> DSRS), <span class="at">color =</span> <span class="st">"grey"</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> ari, <span class="fu">aes</span>(<span class="at">x =</span> OSRS, <span class="at">y =</span> DSRS), <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="at">data =</span> ari, <span class="fu">aes</span>(<span class="at">x =</span> OSRS, <span class="at">y =</span> DSRS, <span class="at">label =</span> <span class="st">"Arizona"</span>), <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">fontface =</span> <span class="st">"bold"</span>, <span class="at">nudge_y =</span> <span class="sc">-</span><span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="fl">7.5</span>, <span class="at">y =</span> <span class="dv">8</span>, <span class="at">label =</span> <span class="st">"Good offense,</span><span class="sc">\n</span><span class="st">good defense"</span>, <span class="at">color =</span> <span class="st">"grey"</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">7.5</span>, <span class="at">y =</span> <span class="sc">-</span><span class="fl">8.5</span>, <span class="at">label =</span> <span class="st">"Bad offense,</span><span class="sc">\n</span><span class="st">bad defense"</span>, <span class="at">color =</span> <span class="st">"grey"</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Arizona's offense was close to average. Its defense was not."</span>,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Offensive and defensive SRS for every NFL team in 2025. The Cardinals were just below average on offense but had the sixth worst defense in the league"</span>,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Offensive SRS"</span>,</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Defensive SRS"</span>,</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Source: Pro-Football-Reference | By Monty Meyer"</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">9</span>),</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Every dot on this chart is a NFL team. The further right a team is located, the better it’s offense is. The higher it is, the better it’s defense. The dashed lines mark an average team, which shows that the upper right corner is where the contenders are and the lower left is where the worst team should end up.&nbsp;</p>
+<p>Arizona is not in the lower left corner. It sits almost right on the vertical line with an offensive rating of -1.0 which is a point below average and right in the middle of the league. Arizona’s problem is how far it falls below the horizontal line. The Cardinal’s defensive rating of -3.4 was the sixth worst in the NFL and the Cardinals on the year gave up 488 total points which was the fourth most.&nbsp;</p>
+<p>In other words, the Cardinals didn’t have an offensive problem. They had a defensive problem and it did not get better as the season went on.&nbsp;</p>
+<p>A Tale of Two Halves</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">data =</span> cardinals, <span class="fu">aes</span>(<span class="at">x =</span> week, <span class="at">y =</span> margin, <span class="at">fill =</span> opponent_playoff)) <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">8</span>, <span class="dv">8</span>), <span class="at">color =</span> <span class="st">"grey"</span>, <span class="at">linetype =</span> <span class="st">"dotted"</span>) <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"no"</span> <span class="ot">=</span> <span class="st">"grey50"</span>, <span class="st">"yes"</span> <span class="ot">=</span> <span class="st">"red"</span>)) <span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> cardinals<span class="sc">$</span>week) <span class="sc">+</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Seven close games then the second half"</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Arizona's final margin in each 2025 game. Every one of its first seven games was decided by seven points or fewer. Red bars are games against playoff teams. Dotted lines mark a one score game."</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Week"</span>,</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Point margin"</span>,</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Opponent made playoffs"</span>,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Source: Pro-Football-Reference | By Monty Meyer"</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">9</span>),</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"top"</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Each bar is one game. The bars above the line are wins and the bars below are losses. The length of the bar shows the margin. The red bars represent playoff teams while the grey bars represent teams that did not make the playoffs. Anything that is in between the dotted lines is a one score game.&nbsp;</p>
+<p>Take a look at the left side of the chart. Before the Cardinal’s bye week, every game stayed inside the dotted lines. Arizona first started 2-0 but then lost five straight games by a combined 13 points which included 1 point losses to the 49ers and the Titans. This shows that they were relatively competitive in the first half of the season.&nbsp;</p>
+<p>Now take a look at the right side. After the bye, the bars for the most part get longer. Six of their last ten games were losses by 17 points or more with five of them being to playoff teams. The offense was scoring about the same as before around 20 points per game. On the other hand the defense went from giving up 22 points a game before the bye to 33 after.&nbsp;</p>
+<p>Close games are usually where luck can play a bigger factor. Eight of Arizona’s 14 losses were by one score with five being by three points or fewer. A common way to measure this type of luck is expected wins which estimates how many games a team should have won based on the points it scored vs the amount it allowed.&nbsp; By that measure, the Cardinals 355 points scored and 488 points allowed was worth about 5.4 wins compared to their total of 3 on the season.&nbsp;</p>
+<p>Below Average Team, Brutal Schedule</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>comparison <span class="ot">&lt;-</span> standings <span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(team <span class="sc">==</span> <span class="st">"Arizona Cardinals"</span> <span class="sc">|</span> (W <span class="sc">&gt;</span> <span class="dv">3</span> <span class="sc">&amp;</span> SRS <span class="sc">&lt;</span> <span class="sc">-</span><span class="fl">4.4</span>))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>titans <span class="ot">&lt;-</span> standings <span class="sc">|&gt;</span> <span class="fu">filter</span>(team <span class="sc">==</span> <span class="st">"Tennessee Titans"</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"grey60"</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"grey60"</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> standings, <span class="fu">aes</span>(<span class="at">x =</span> SRS, <span class="at">y =</span> SoS, <span class="at">size =</span> W), <span class="at">color =</span> <span class="st">"grey"</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> comparison <span class="sc">|&gt;</span> <span class="fu">filter</span>(team <span class="sc">!=</span> <span class="st">"Arizona Cardinals"</span>), <span class="fu">aes</span>(<span class="at">x =</span> SRS, <span class="at">y =</span> SoS, <span class="at">size =</span> W), <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> ari, <span class="fu">aes</span>(<span class="at">x =</span> SRS, <span class="at">y =</span> SoS, <span class="at">size =</span> W), <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="at">data =</span> comparison, <span class="fu">aes</span>(<span class="at">x =</span> SRS, <span class="at">y =</span> SoS, <span class="at">label =</span> <span class="fu">str_remove</span>(team, <span class="st">"^.* "</span>)), <span class="at">size =</span> <span class="fl">3.2</span>, <span class="at">box.padding =</span> <span class="fl">0.6</span>, <span class="at">min.segment.length =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="at">data =</span> titans, <span class="fu">aes</span>(<span class="at">x =</span> SRS, <span class="at">y =</span> SoS, <span class="at">label =</span> <span class="st">"Titans"</span>), <span class="at">size =</span> <span class="fl">3.2</span>, <span class="at">color =</span> <span class="st">"grey40"</span>, <span class="at">nudge_y =</span> <span class="sc">-</span><span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">9</span>), <span class="at">name =</span> <span class="st">"Wins"</span>) <span class="sc">+</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">size =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">color =</span> <span class="st">"grey"</span>))) <span class="sc">+</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">10</span>, <span class="at">y =</span> <span class="fl">3.9</span>, <span class="at">label =</span> <span class="st">"Good team,hard schedule"</span>, <span class="at">color =</span> <span class="st">"grey50"</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="sc">-</span><span class="dv">10</span>, <span class="at">y =</span> <span class="sc">-</span><span class="fl">3.9</span>, <span class="at">label =</span> <span class="st">"Bad team,easy schedule"</span>, <span class="at">color =</span> <span class="st">"grey50"</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Nobody had a tougher road than Arizona"</span>,</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"SRS and strength of schedule for every 2025 NFL team sized by wins. Five teams in black won more games than Arizona despite being rated worse and playing easier schedules"</span>,</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"SRS (better →)"</span>,</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Strength of schedule (harder ↑)"</span>,</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Source: Pro-Football-Reference | By Monty Meyer"</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">9</span>),</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This chart puts all of the previous ideas together. The further right a team is the better its SRS rating. The higher it is, the harder the teams strength of schedule was. The size of each dot represents its win total showing that the bigger dots are the team with higher wins.&nbsp;</p>
+<p>Let’s look at the top. Arizona and Tennessee share the top of the chart being tied for the hardest schedule in football. Despite having the same record and schedule, it clearly shows the Cardinals having a SRS about three points better.&nbsp;</p>
+<p>Now look at the five black dots below and to the left of Arizona. Every one of those teams had an easier schedule and were rated worse the Arizona. All of those teams won more games with their win totals being between 5 and 7. Miami managed to win 7 games with a SRS rating of nearly 2 points worse than the Cardinals. That’s an astonishing difference of 5 wins in the season.&nbsp;</p>
+<p>So were they 3-14 bad?</p>
+<p>No! The Cardinals were not a good football team. You could even classify them as bad one. They had one of the worst defenses in the league and their season ultimately fell&nbsp; apart in the second half of the season.&nbsp;</p>
+<p>But they were not the worst team in the NFL. They were much closer to 9th worst having to go through the toughest schedule in the league and losing many close games. This resulted in them likely being about two or three wins short of what their SRS points say they could have achieved.&nbsp;</p>
+<p>As a Cardinals fan I am used to losing. I have seen many bad Cardinals teams in my nearly two decade time being a fan. I have seen quarterbacks like Ryan Lindley, Kevin Kolb and John Skeleton( kudos if you know those names) come through the desert. However, I remember watching this team last year and thinking that we played pretty well despite picking in the top 3 of the next year’s draft (Jeremiah Love please save our franchise).&nbsp;</p>
+<p><br>
+Did I come in expecting them to show they were supposed to be a playoff contender? No of course not! But after doing the research, I can conclude that this is not the worst Cardinals team I have seen play and as a Cardinals fan you take the little wins.</p>
 
 
 
